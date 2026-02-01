@@ -7,73 +7,38 @@ type Card = {
   id: number;
   src: string;
   label: string;
-  x: number;
-  y: number;
-  rotate: number;
-  z: number;
 };
-
-const heartPositions = [
-  { top: "10%", left: "8%" },
-  { top: "18%", right: "12%" },
-  { bottom: "20%", left: "12%" },
-  { bottom: "12%", right: "10%" },
-];
 
 const createInitialCards = (): Card[] => [
   {
     id: 1,
     src: "/images/heart-1.svg",
     label: "Aeternity sparkle",
-    x: 0,
-    y: 0,
-    rotate: -8,
-    z: 1,
   },
   {
     id: 2,
     src: "/images/heart-2.svg",
     label: "Aeternity bloom",
-    x: 160,
-    y: 10,
-    rotate: 6,
-    z: 2,
   },
   {
     id: 3,
     src: "/images/heart-3.svg",
     label: "Aeternity wish",
-    x: 90,
-    y: 140,
-    rotate: -4,
-    z: 3,
   },
   {
     id: 4,
     src: "/images/heart-1.svg",
     label: "Aeternity glow",
-    x: 260,
-    y: 100,
-    rotate: 8,
-    z: 4,
   },
   {
     id: 5,
     src: "/images/heart-2.svg",
     label: "Aeternity whisper",
-    x: 40,
-    y: 220,
-    rotate: -10,
-    z: 5,
   },
   {
     id: 6,
     src: "/images/heart-3.svg",
     label: "Aeternity flutter",
-    x: 200,
-    y: 230,
-    rotate: 4,
-    z: 6,
   },
 ];
 
@@ -82,133 +47,53 @@ const clamp = (value: number, min: number, max: number) =>
 
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
-  const [accepted, setAccepted] = useState(false);
+  const [accepted, setAccepted] = useState<string | null>(null);
   const [cards, setCards] = useState<Card[]>(() => createInitialCards());
-  const [noPos, setNoPos] = useState({ x: 30, y: 10 });
-  const noButtonRef = useRef<HTMLButtonElement | null>(null);
-  const buttonAreaRef = useRef<HTMLDivElement | null>(null);
+  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
   const cardsRef = useRef<HTMLDivElement | null>(null);
   const dragRef = useRef<{
     id: number;
-    offsetX: number;
-    offsetY: number;
     pointerId: number;
+    startX: number;
+    startY: number;
   } | null>(null);
 
-  const moveNoButton = useCallback((pointer?: { x: number; y: number }) => {
-    const area = buttonAreaRef.current;
-    const button = noButtonRef.current;
-    if (!area || !button) {
-      return;
-    }
-    const areaRect = area.getBoundingClientRect();
-    const buttonRect = button.getBoundingClientRect();
-    const maxX = Math.max(areaRect.width - buttonRect.width - 8, 0);
-    const maxY = Math.max(areaRect.height - buttonRect.height - 8, 0);
-    let nextX = Math.random() * maxX;
-    let nextY = Math.random() * maxY;
-
-    if (pointer) {
-      const padding = 120;
-      let attempts = 0;
-      while (attempts < 12) {
-        const candidateX = Math.random() * maxX;
-        const candidateY = Math.random() * maxY;
-        const centerX = areaRect.left + candidateX + buttonRect.width / 2;
-        const centerY = areaRect.top + candidateY + buttonRect.height / 2;
-        const distance = Math.hypot(centerX - pointer.x, centerY - pointer.y);
-        if (distance > padding) {
-          nextX = candidateX;
-          nextY = candidateY;
-          break;
-        }
-        attempts += 1;
-      }
-    }
-
-    setNoPos({ x: nextX, y: nextY });
-  }, []);
-
-  const handleButtonAreaMove = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      const button = noButtonRef.current;
-      if (!button) {
-        return;
-      }
-      const buttonRect = button.getBoundingClientRect();
-      const centerX = buttonRect.left + buttonRect.width / 2;
-      const centerY = buttonRect.top + buttonRect.height / 2;
-      const distance = Math.hypot(centerX - event.clientX, centerY - event.clientY);
-      if (distance < 140) {
-        moveNoButton({ x: event.clientX, y: event.clientY });
-      }
-    },
-    [moveNoButton],
-  );
-
-  const bringCardToFront = useCallback((id: number) => {
-    setCards((prev) => {
-      const maxZ = Math.max(...prev.map((card) => card.z));
-      return prev.map((card) =>
-        card.id === id ? { ...card, z: maxZ + 1 } : card,
-      );
-    });
-  }, []);
+  const activeCard = cards[0];
 
   const handlePointerDown = useCallback(
-    (id: number) => (event: React.PointerEvent<HTMLDivElement>) => {
-      const target = event.currentTarget;
-      const container = cardsRef.current;
-      if (!container) {
+    (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!activeCard) {
         return;
       }
-      const containerRect = container.getBoundingClientRect();
-      const targetRect = target.getBoundingClientRect();
       dragRef.current = {
-        id,
-        offsetX: event.clientX - targetRect.left,
-        offsetY: event.clientY - targetRect.top,
+        id: activeCard.id,
         pointerId: event.pointerId,
+        startX: event.clientX,
+        startY: event.clientY,
       };
-      bringCardToFront(id);
-      target.setPointerCapture(event.pointerId);
-      const nextX = targetRect.left - containerRect.left;
-      const nextY = targetRect.top - containerRect.top;
-      setCards((prev) =>
-        prev.map((card) =>
-          card.id === id ? { ...card, x: nextX, y: nextY } : card,
-        ),
-      );
+      event.currentTarget.setPointerCapture(event.pointerId);
     },
-    [bringCardToFront],
+    [activeCard],
   );
 
   const handlePointerMove = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
       const dragData = dragRef.current;
-      const container = cardsRef.current;
-      if (!dragData || !container || dragData.pointerId !== event.pointerId) {
+      if (!dragData || dragData.pointerId !== event.pointerId) {
         return;
       }
-      const containerRect = container.getBoundingClientRect();
-      const nextX = event.clientX - containerRect.left - dragData.offsetX;
-      const nextY = event.clientY - containerRect.top - dragData.offsetY;
-      const maxX = containerRect.width - 140;
-      const maxY = containerRect.height - 140;
-      setCards((prev) =>
-        prev.map((card) =>
-          card.id === dragData.id
-            ? {
-                ...card,
-                x: clamp(nextX, 0, maxX),
-                y: clamp(nextY, 0, maxY),
-              }
-            : card,
-        ),
-      );
+      setDragOffset({
+        x: event.clientX - dragData.startX,
+        y: event.clientY - dragData.startY,
+      });
     },
     [],
   );
+
+  const resetDrag = useCallback(() => {
+    dragRef.current = null;
+    setDragOffset({ x: 0, y: 0 });
+  }, []);
 
   const handlePointerUp = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
@@ -216,15 +101,29 @@ export default function Home() {
       if (!dragData || dragData.pointerId !== event.pointerId) {
         return;
       }
-      dragRef.current = null;
+      const decisionThreshold = 130;
+      if (Math.abs(dragOffset.x) > decisionThreshold) {
+        const decision = dragOffset.x > 0 ? "yes" : "no";
+        setAccepted(decision);
+        setCards((prev) => prev.filter((card) => card.id !== dragData.id));
+      }
+      resetDrag();
     },
-    [],
+    [dragOffset.x, resetDrag],
   );
+
+  const handlePointerLeave = useCallback(() => {
+    if (dragRef.current) {
+      resetDrag();
+    }
+  }, [resetDrag]);
 
   const envelopeText = useMemo(
     () => (accepted ? "My heart is doing cartwheels!" : "Tap to open your letter"),
     [accepted],
   );
+  const yesOpacity = clamp((dragOffset.x - 30) / 120, 0, 1);
+  const noOpacity = clamp((-dragOffset.x - 30) / 120, 0, 1);
 
   return (
     <main>
@@ -239,16 +138,16 @@ export default function Home() {
               type="button"
               onClick={() => setIsOpen(true)}
             >
-              <span className="sparkle">✨</span>
-              <div className="floating-hearts">
-                {heartPositions.map((pos, index) => (
-                  <span key={index} style={pos}>
-                    💖
-                  </span>
-                ))}
+              <div className="envelope-front">
+                <div className="envelope-top" />
+                <div className="envelope-bottom" />
+                <span className="stamp">💌</span>
               </div>
-              <span>Love letter loading...</span>
-              <h2>{envelopeText}</h2>
+              <div className="envelope-copy">
+                <span className="sparkle">✨</span>
+                <span className="eyebrow">Sealed with love</span>
+                <h2>{envelopeText}</h2>
+              </div>
             </button>
           ) : (
             <div className="letter">
@@ -264,58 +163,61 @@ export default function Home() {
                 className="cards"
                 onPointerMove={handlePointerMove}
                 onPointerUp={handlePointerUp}
-                onPointerLeave={handlePointerUp}
+                onPointerLeave={handlePointerLeave}
               >
-                {cards.map((card) => (
-                  <div
-                    key={card.id}
-                    className="card"
-                    style={{
-                      transform: `translate(${card.x}px, ${card.y}px) rotate(${card.rotate}deg)`,
-                      zIndex: card.z,
-                    }}
-                    onPointerDown={handlePointerDown(card.id)}
-                  >
-                    <Image src={card.src} alt={card.label} width={110} height={110} />
-                    <span>{card.label}</span>
-                  </div>
-                ))}
+                <div className="card-label card-label-no" style={{ opacity: noOpacity }}>
+                  No
+                </div>
+                <div className="card-label card-label-yes" style={{ opacity: yesOpacity }}>
+                  Yes
+                </div>
+                <div className="card-stack">
+                  {cards.map((card, index) => {
+                    const isTop = index === 0;
+                    const baseOffset = Math.min(index * 10, 30);
+                    const baseScale = 1 - index * 0.04;
+                    const dragX = isTop ? dragOffset.x : 0;
+                    const dragY = isTop ? dragOffset.y : 0;
+                    const rotate = isTop ? clamp(dragOffset.x / 12, -14, 14) : 0;
+                    return (
+                      <div
+                        key={card.id}
+                        className={`card ${isTop ? "card-active" : ""}`}
+                        style={{
+                          transform: `translate(${dragX}px, ${dragY + baseOffset}px) rotate(${rotate}deg) scale(${baseScale})`,
+                          zIndex: cards.length - index,
+                        }}
+                        onPointerDown={isTop ? handlePointerDown : undefined}
+                      >
+                        <div className="card-media">
+                          <Image
+                            src={card.src}
+                            alt={card.label}
+                            width={180}
+                            height={180}
+                          />
+                        </div>
+                        <span>{card.label}</span>
+                      </div>
+                    );
+                  })}
+                </div>
               </div>
 
               <div className="question-area">
                 <h4>Will you be my Valentine?</h4>
-                <p>Choose wisely — the little “no” is feeling shy.</p>
-                <div
-                  className="button-row"
-                  ref={buttonAreaRef}
-                  onPointerMove={handleButtonAreaMove}
-                  onPointerDown={handleButtonAreaMove}
-                >
-                  <button
-                    className="btn btn-yes"
-                    type="button"
-                    onClick={() => setAccepted(true)}
-                  >
-                    Yes, always!
-                  </button>
-                  <button
-                    ref={noButtonRef}
-                    className="btn btn-no"
-                    type="button"
-                    style={{ left: noPos.x, top: noPos.y }}
-                    onPointerEnter={() => moveNoButton()}
-                    onClick={() => moveNoButton()}
-                    onFocus={() => moveNoButton()}
-                  >
-                    No (if you can catch me)
-                  </button>
+                <p>Drag a card left for “no” or right for “yes”.</p>
+                <div className="button-row">
+                  <div className="btn btn-no">No</div>
+                  <div className="btn btn-yes">Yes</div>
                 </div>
                 {accepted && (
                   <div className="yay">
-                    <h5>Yay! 💕</h5>
+                    <h5>{accepted === "yes" ? "Yes! 💕" : "No... 😢"}</h5>
                     <p>
-                      You just made this letter the happiest in the whole mailbox.
-                      Let&apos;s plan something sweet!
+                      {accepted === "yes"
+                        ? "You just made this letter the happiest in the whole mailbox."
+                        : "Even a shy no still gets a smile back."}
                     </p>
                   </div>
                 )}

@@ -86,11 +86,12 @@ main {
 .envelope-closed {
   position: relative;
   display: grid;
+  gap: 1.5rem;
   place-items: center;
-  padding: 5rem 2rem 3rem;
-  border: 2px dashed #f7a9c8;
+  padding: 4rem 2rem 3rem;
+  border: 2px solid #f7a9c8;
   border-radius: 24px;
-  background: linear-gradient(180deg, #fff5f9 0%, #fff 100%);
+  background: linear-gradient(180deg, #fff0f6 0%, #fff9fc 100%);
   cursor: pointer;
   overflow: hidden;
   z-index: 2;
@@ -104,6 +105,53 @@ main {
   border-radius: 50%;
   background: radial-gradient(circle, rgba(255, 180, 210, 0.5), transparent 70%);
   animation: float 6s ease-in-out infinite;
+}
+
+.envelope-front {
+  position: relative;
+  width: min(320px, 70%);
+  aspect-ratio: 4 / 3;
+  background: linear-gradient(145deg, #ffe1ef, #fff6fb);
+  border-radius: 18px;
+  border: 2px solid #ffd1e4;
+  box-shadow: inset 0 6px 12px rgba(255, 255, 255, 0.7);
+}
+
+.envelope-top {
+  position: absolute;
+  inset: 0;
+  clip-path: polygon(0 0, 50% 48%, 100% 0, 100% 100%, 0 100%);
+  background: linear-gradient(160deg, #ffd1e4, #ffeef6);
+  border-radius: 18px;
+}
+
+.envelope-bottom {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  height: 58%;
+  background: linear-gradient(145deg, #ffe8f2, #fff9fc);
+  clip-path: polygon(0 0, 50% 45%, 100% 0, 100% 100%, 0 100%);
+}
+
+.stamp {
+  position: absolute;
+  right: 18px;
+  bottom: 18px;
+  font-size: 1.6rem;
+}
+
+.envelope-copy {
+  position: relative;
+  text-align: center;
+  z-index: 1;
+}
+
+.envelope-copy .eyebrow {
+  display: block;
+  font-size: 0.95rem;
+  color: #c24a82;
 }
 
 .envelope-closed h2 {
@@ -141,28 +189,81 @@ main {
 
 .cards {
   position: relative;
-  height: 360px;
+  height: 420px;
   margin-bottom: 1.5rem;
+  display: grid;
+  place-items: center;
+  border-radius: 24px;
+  background: linear-gradient(135deg, rgba(255, 226, 240, 0.4), transparent);
+  border: 1px dashed rgba(255, 209, 228, 0.7);
+}
+
+.card-stack {
+  position: relative;
+  width: min(360px, 100%);
+  height: 100%;
+  display: grid;
+  place-items: center;
+}
+
+.card-label {
+  position: absolute;
+  top: 24px;
+  font-size: 1.2rem;
+  font-weight: 700;
+  padding: 0.4rem 1rem;
+  border-radius: 999px;
+  text-transform: uppercase;
+  letter-spacing: 0.1em;
+  color: #fff;
+  background: rgba(61, 27, 61, 0.7);
+  z-index: 0;
+}
+
+.card-label-no {
+  left: 24px;
+  background: rgba(236, 72, 153, 0.9);
+}
+
+.card-label-yes {
+  right: 24px;
+  background: rgba(16, 185, 129, 0.9);
 }
 
 .card {
   position: absolute;
-  width: 160px;
-  height: 160px;
-  border-radius: 18px;
-  background: #fff7fb;
+  width: 280px;
+  height: 320px;
+  border-radius: 24px;
+  background: #fff;
   border: 2px solid #ffd1e4;
-  box-shadow: 0 16px 30px rgba(178, 39, 111, 0.16);
+  box-shadow: 0 20px 40px rgba(178, 39, 111, 0.2);
   display: grid;
   place-items: center;
+  gap: 0.75rem;
+  padding: 1.25rem;
   cursor: grab;
   touch-action: none;
-  transition: transform 0.25s ease;
+  transition: transform 0.2s ease;
+}
+
+.card-active {
+  cursor: grabbing;
+}
+
+.card-media {
+  width: 100%;
+  height: 200px;
+  border-radius: 18px;
+  background: #fff0f7;
+  border: 1px solid rgba(255, 209, 228, 0.7);
+  display: grid;
+  place-items: center;
 }
 
 .card img {
-  width: 110px;
-  height: 110px;
+  width: 150px;
+  height: 150px;
 }
 
 .card span {
@@ -188,7 +289,7 @@ main {
 .button-row {
   position: relative;
   margin-top: 1.5rem;
-  height: 130px;
+  height: 80px;
   display: flex;
   align-items: center;
   justify-content: center;
@@ -219,7 +320,6 @@ main {
 .btn-no {
   background: #ffe5ef;
   color: #b2276f;
-  position: absolute;
 }
 
 .yay {
@@ -301,8 +401,12 @@ main {
   }
 
   .card {
-    width: 140px;
-    height: 140px;
+    width: 240px;
+    height: 280px;
+  }
+
+  .card-media {
+    height: 170px;
   }
 }
 

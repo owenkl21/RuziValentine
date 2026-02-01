@@ -300,7 +300,7 @@ main {
   overflow: hidden;
 }
 
-.draggable-card {
+.draggable-card-body {
   position: absolute;
   width: 260px;
   height: 300px;
@@ -316,8 +316,61 @@ main {
   touch-action: none;
 }
 
-.draggable-card:active {
+.draggable-card-body:active {
   cursor: grabbing;
+}
+
+.draggable-card-body h3 {
+  margin: 0;
+  text-align: center;
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: #a42163;
+  text-transform: uppercase;
+  letter-spacing: 0.08em;
+}
+
+.card-hint {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: min(320px, 70%);
+  transform: translate(-50%, -50%);
+  text-align: center;
+  font-size: 1.2rem;
+  font-weight: 700;
+  color: rgba(178, 39, 111, 0.35);
+  pointer-events: none;
+}
+
+.card-slot-1 {
+  top: 8%;
+  left: 14%;
+}
+
+.card-slot-2 {
+  top: 20%;
+  left: 34%;
+}
+
+.card-slot-3 {
+  top: 6%;
+  left: 54%;
+}
+
+.card-slot-4 {
+  top: 30%;
+  left: 60%;
+}
+
+.card-slot-5 {
+  top: 40%;
+  left: 24%;
+}
+
+.card-slot-6 {
+  top: 18%;
+  left: 44%;
 }
 
 .card-loading {
@@ -341,7 +394,7 @@ main {
   pointer-events: none;
 }
 
-.letter-card-overlay .draggable-card {
+.letter-card-overlay .draggable-card-body {
   pointer-events: auto;
 }
 

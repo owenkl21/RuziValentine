@@ -17,18 +17,18 @@ type Card = {
 };
 
 const createInitialCards = (): Card[] => [
-  {
-    id: 1,
-    src: "/couples/couple1.jpeg",
-    label: "Goue-uur gloed",
-    className: "card-slot-1",
-    rotate: -6,
-    priority: true,
-  },
+  // {
+  //   id: 1,
+  //   src: "/couples/couple1.jpeg",
+  //   label: "Goue-uur gloed",
+  //   className: "card-slot-1",
+  //   rotate: -6,
+  //   priority: true,
+  // },
   {
     id: 2,
     src: "/couples/couple2.jpeg",
-    label: "Middernag giggels",
+    label: "Snaakse oomblikke",
     className: "card-slot-2",
     rotate: -4,
     priority: true,
@@ -36,28 +36,28 @@ const createInitialCards = (): Card[] => [
   {
     id: 3,
     src: "/couples/couple3.jpeg",
-    label: "Sagte drukkies",
+    label: "Liefde in oorvloed",
     className: "card-slot-3",
     rotate: 4,
   },
   {
     id: 4,
     src: "/couples/couple4.jpeg",
-    label: "Stad-stappies",
+    label: "Stilte saam",
     className: "card-slot-4",
     rotate: 8,
   },
   {
     id: 5,
     src: "/couples/couple5.jpeg",
-    label: "Soetste selfies",
+    label: "Die Verloofde Dans",
     className: "card-slot-5",
     rotate: -8,
   },
   {
     id: 6,
     src: "/couples/couple6.jpeg",
-    label: "Hand-aan-hand",
+    label: "Skouer-aan-skouer",
     className: "card-slot-6",
     rotate: 2,
   },
@@ -108,8 +108,8 @@ export default function Home() {
   const envelopeText = useMemo(
     () =>
       accepted
-        ? "My hart doen sommer wielies!"
-        : "Tik om jou briefie oop te maak",
+        ? "My hart is in oorvloed!"
+        : "Maak maar die briefie oop",
     [accepted],
   );
 
@@ -131,7 +131,7 @@ export default function Home() {
   return (
     <main>
       <section className="scene">
-        <h1 className="title">’n Klein liefdesbrief net vir jou 💌</h1>
+        <h1 className="title">’n Klein briefie vir my liefie 💌</h1>
         <div className={`envelope ${isOpen ? "open" : ""}`}>
           <div className="envelope-back" aria-hidden="true" />
           <div className="envelope-flap" aria-hidden="true" />
@@ -148,22 +148,23 @@ export default function Home() {
               </div>
               <div className="envelope-copy">
                 <span className="sparkle">✨</span>
-                <span className="eyebrow">Met liefde verseël</span>
+                {/* <span className="eyebrow">Maak maar die briefie oop</span> */}
                 <h2>{envelopeText}</h2>
               </div>
             </button>
           ) : (
             <div className="letter">
-              <h3>Liewe Jy,</h3>
+              <h3>Liewe Ruzi,</h3>
               <p>
-                Ek het ’n sak-sterreskare net vir ons gemaak. Sleep die
-                Aeternity-hartjies rond, hou een in jou sak, en laat die res terugdryf
-                na my toe.
+                Elke dag dank ek God vir jou, vir jou hart, jou liefde en die pad wat ons saam stap. Jy is my veilige plek, my vreugde en my beste vriend. Ek sien so uit na ons toekoms saam, hand aan hand, met God in die middel van alles wat ons doen.
               </p>
-
+              <p>“Bo alles moet julle mekaar innig liefhê, want die liefde bedek baie sondes.”
+(1 Petrus 4:8)</p>
+              <p>Gelukkige Valentynsdag, my liefde. Ek kies jou, vandag en elke dag</p>
+              <p>Met al my Liefde,</p>
+              <p>Jou Verloofde!</p>
               <div className="question-area">
                 <h4>Sal jy my Valentyn wees?</h4>
-                <p>Sê ja om die verrassings-hartjies oop te maak.</p>
                 {accepted !== "yes" && (
                   <div ref={buttonRowRef} className="button-row">
                     <button
@@ -196,7 +197,7 @@ export default function Home() {
                     <h5>{accepted === "yes" ? "Ja! 💕" : "Nee... 😢"}</h5>
                     <p>
                       {accepted === "yes"
-                        ? "Okay wow—nou kan ek ons soetste afspraak ooit beplan."
+                        ? "Okay dit het langer gevat as wat ek verwag het. Nou kan ek die beste Valentynsdag ooit beplan."
                         : "Selfs ’n skaam nee kry nog ’n glimlag terug."}
                     </p>
                   </div>
@@ -207,10 +208,10 @@ export default function Home() {
                   className="letter-card-overlay"
                   constrainToContainer={false}
                 >
-                  <p className="card-hint">
+                  {/* <p className="card-hint">
                     As dit jou eerste dag by Fight Club is, moet jy baklei (maar net
                     met glimlagte).
-                  </p>
+                  </p> */}
                   {createInitialCards().map((card) => (
                     <DraggableCardBody
                       key={card.id}

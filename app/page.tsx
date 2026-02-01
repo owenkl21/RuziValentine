@@ -210,6 +210,8 @@ export default function Home() {
                           alt={card.label}
                           width={180}
                           height={180}
+                          draggable={false}
+                          onDragStart={(event) => event.preventDefault()}
                         />
                       </div>
                       <h3>{card.label}</h3>

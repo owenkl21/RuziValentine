@@ -63,7 +63,6 @@ const createInitialCards = (): Card[] => [
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [accepted, setAccepted] = useState<string | null>(null);
-  const [showCards, setShowCards] = useState(false);
   const [noOffset, setNoOffset] = useState({ x: 0, y: 0 });
   const buttonRowRef = useRef<HTMLDivElement | null>(null);
   const noButtonRef = useRef<HTMLButtonElement | null>(null);
@@ -71,7 +70,6 @@ export default function Home() {
 
   const handleYesClick = useCallback(() => {
     setAccepted("yes");
-    setShowCards(false);
   }, []);
 
   const moveNoButton = useCallback(() => {
@@ -102,26 +100,19 @@ export default function Home() {
     [accepted],
   );
 
-  const shouldShowCards = accepted === "yes" ? showCards : true;
+  const shouldShowCards = accepted !== "yes";
 
   useEffect(() => {
     if (accepted !== "yes") {
       return;
     }
-    let timeout: NodeJS.Timeout | null = null;
     const fire = async () => {
       const confettiModule = await import("canvas-confetti");
       const confetti = confettiModule.default;
       confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
       confetti({ particleCount: 90, spread: 120, origin: { y: 0.4 } });
-      timeout = setTimeout(() => setShowCards(true), 350);
     };
     fire();
-    return () => {
-      if (timeout) {
-        clearTimeout(timeout);
-      }
-    };
   }, [accepted]);
 
   return (
@@ -198,7 +189,7 @@ export default function Home() {
                   </div>
                 )}
               </div>
-              {shouldShowCards ? (
+              {shouldShowCards && (
                 <DraggableCardContainer
                   className="letter-card-overlay"
                   constrainToContainer={false}
@@ -225,10 +216,6 @@ export default function Home() {
                     </DraggableCardBody>
                   ))}
                 </DraggableCardContainer>
-              ) : (
-                <div className="card-loading letter-card-loading">
-                  Confetti incoming…
-                </div>
               )}
             </div>
           )}

@@ -2,6 +2,10 @@
 
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
+import {
+  DraggableCard,
+  DraggableCardContainer,
+} from "./components/ui/draggable-card";
 
 type Card = {
   id: number;
@@ -42,87 +46,17 @@ const createInitialCards = (): Card[] => [
   },
 ];
 
-const clamp = (value: number, min: number, max: number) =>
-  Math.min(Math.max(value, min), max);
-
 export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [accepted, setAccepted] = useState<string | null>(null);
-  const [cards, setCards] = useState<Card[]>(() => createInitialCards());
-  const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [showCards, setShowCards] = useState(false);
   const [noOffset, setNoOffset] = useState({ x: 0, y: 0 });
-  const cardsRef = useRef<HTMLDivElement | null>(null);
   const buttonRowRef = useRef<HTMLDivElement | null>(null);
   const noButtonRef = useRef<HTMLButtonElement | null>(null);
-  const dragRef = useRef<{
-    id: number;
-    pointerId: number;
-    startX: number;
-    startY: number;
-  } | null>(null);
-
-  const activeCard = cards[0];
-
-  const handlePointerDown = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      if (!activeCard) {
-        return;
-      }
-      dragRef.current = {
-        id: activeCard.id,
-        pointerId: event.pointerId,
-        startX: event.clientX,
-        startY: event.clientY,
-      };
-      event.currentTarget.setPointerCapture(event.pointerId);
-    },
-    [activeCard],
-  );
-
-  const handlePointerMove = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      const dragData = dragRef.current;
-      if (!dragData || dragData.pointerId !== event.pointerId) {
-        return;
-      }
-      setDragOffset({
-        x: event.clientX - dragData.startX,
-        y: event.clientY - dragData.startY,
-      });
-    },
-    [],
-  );
-
-  const resetDrag = useCallback(() => {
-    dragRef.current = null;
-    setDragOffset({ x: 0, y: 0 });
-  }, []);
-
-  const handlePointerUp = useCallback(
-    (event: React.PointerEvent<HTMLDivElement>) => {
-      const dragData = dragRef.current;
-      if (!dragData || dragData.pointerId !== event.pointerId) {
-        return;
-      }
-      const decisionThreshold = 130;
-      if (Math.abs(dragOffset.x) > decisionThreshold) {
-        const decision = dragOffset.x > 0 ? "yes" : "no";
-        setAccepted(decision);
-        setCards((prev) => prev.filter((card) => card.id !== dragData.id));
-      }
-      resetDrag();
-    },
-    [dragOffset.x, resetDrag],
-  );
-
-  const handlePointerLeave = useCallback(() => {
-    if (dragRef.current) {
-      resetDrag();
-    }
-  }, [resetDrag]);
 
   const handleYesClick = useCallback(() => {
     setAccepted("yes");
+    setShowCards(false);
   }, []);
 
   const moveNoButton = useCallback(() => {
@@ -152,8 +86,26 @@ export default function Home() {
     () => (accepted ? "My heart is doing cartwheels!" : "Tap to open your letter"),
     [accepted],
   );
-  const yesOpacity = clamp((dragOffset.x - 30) / 120, 0, 1);
-  const noOpacity = clamp((-dragOffset.x - 30) / 120, 0, 1);
+
+  useEffect(() => {
+    if (accepted !== "yes") {
+      return;
+    }
+    let timeout: NodeJS.Timeout | null = null;
+    const fire = async () => {
+      const confettiModule = await import("canvas-confetti");
+      const confetti = confettiModule.default;
+      confetti({ particleCount: 150, spread: 80, origin: { y: 0.6 } });
+      confetti({ particleCount: 90, spread: 120, origin: { y: 0.4 } });
+      timeout = setTimeout(() => setShowCards(true), 350);
+    };
+    fire();
+    return () => {
+      if (timeout) {
+        clearTimeout(timeout);
+      }
+    };
+  }, [accepted]);
 
   return (
     <main>
@@ -188,76 +140,36 @@ export default function Home() {
                 to me.
               </p>
 
-              <div
-                ref={cardsRef}
-                className="cards"
-                onPointerMove={handlePointerMove}
-                onPointerUp={handlePointerUp}
-                onPointerLeave={handlePointerLeave}
-              >
-                <div className="card-label card-label-no" style={{ opacity: noOpacity }}>
-                  No
-                </div>
-                <div className="card-label card-label-yes" style={{ opacity: yesOpacity }}>
-                  Yes
-                </div>
-                <div className="card-stack">
-                  {cards.map((card, index) => {
-                    const isTop = index === 0;
-                    const baseOffset = Math.min(index * 10, 30);
-                    const baseScale = 1 - index * 0.04;
-                    const dragX = isTop ? dragOffset.x : 0;
-                    const dragY = isTop ? dragOffset.y : 0;
-                    const rotate = isTop ? clamp(dragOffset.x / 12, -14, 14) : 0;
-                    return (
-                      <div
-                        key={card.id}
-                        className={`card ${isTop ? "card-active" : ""}`}
-                        style={{
-                          transform: `translate(${dragX}px, ${dragY + baseOffset}px) rotate(${rotate}deg) scale(${baseScale})`,
-                          zIndex: cards.length - index,
-                        }}
-                        onPointerDown={isTop ? handlePointerDown : undefined}
-                      >
-                        <div className="card-media">
-                          <Image
-                            src={card.src}
-                            alt={card.label}
-                            width={180}
-                            height={180}
-                          />
-                        </div>
-                        <span>{card.label}</span>
-                      </div>
-                    );
-                  })}
-                </div>
-              </div>
-
               <div className="question-area">
                 <h4>Will you be my Valentine?</h4>
-                <p>Drag a card left for “no” or right for “yes”.</p>
-                <div ref={buttonRowRef} className="button-row">
-                  <button
-                    ref={noButtonRef}
-                    className="btn btn-no btn-no-escape"
-                    type="button"
-                    onPointerEnter={moveNoButton}
-                    onPointerDown={moveNoButton}
-                    onClick={(event) => {
-                      event.preventDefault();
-                      moveNoButton();
-                    }}
-                    style={{
-                      transform: `translate(calc(-50% + ${noOffset.x}px), calc(-50% + ${noOffset.y}px))`,
-                    }}
-                  >
-                    No
-                  </button>
-                  <button className="btn btn-yes" type="button" onClick={handleYesClick}>
-                    Yes
-                  </button>
-                </div>
+                <p>Say yes to open the surprise hearts.</p>
+                {accepted !== "yes" && (
+                  <div ref={buttonRowRef} className="button-row">
+                    <button
+                      ref={noButtonRef}
+                      className="btn btn-no btn-no-escape"
+                      type="button"
+                      onPointerEnter={moveNoButton}
+                      onPointerDown={moveNoButton}
+                      onClick={(event) => {
+                        event.preventDefault();
+                        moveNoButton();
+                      }}
+                      style={{
+                        transform: `translate(calc(-50% + ${noOffset.x}px), calc(-50% + ${noOffset.y}px))`,
+                      }}
+                    >
+                      No
+                    </button>
+                    <button
+                      className="btn btn-yes"
+                      type="button"
+                      onClick={handleYesClick}
+                    >
+                      Yes
+                    </button>
+                  </div>
+                )}
                 {accepted && (
                   <div className="yay">
                     <h5>{accepted === "yes" ? "Yes! 💕" : "No... 😢"}</h5>
@@ -269,6 +181,39 @@ export default function Home() {
                   </div>
                 )}
               </div>
+              {accepted === "yes" && (
+                <div className="draggable-card-area">
+                  <h4>Drag the hearts anywhere ✨</h4>
+                  <p>No swiping needed—just play with the cards.</p>
+                  {showCards ? (
+                    <DraggableCardContainer>
+                      {createInitialCards().map((card, index) => (
+                        <DraggableCard
+                          key={card.id}
+                          className="heart-card"
+                          style={{
+                            top: `${12 + index * 8}%`,
+                            left: `${8 + (index % 3) * 22}%`,
+                          }}
+                          initial={{ rotate: index * 4 - 6 }}
+                        >
+                          <div className="card-media">
+                            <Image
+                              src={card.src}
+                              alt={card.label}
+                              width={180}
+                              height={180}
+                            />
+                          </div>
+                          <span>{card.label}</span>
+                        </DraggableCard>
+                      ))}
+                    </DraggableCardContainer>
+                  ) : (
+                    <div className="card-loading">Confetti incoming…</div>
+                  )}
+                </div>
+              )}
             </div>
           )}
         </div>

@@ -24,6 +24,7 @@ main {
   display: grid;
   gap: 2rem;
   align-items: center;
+  justify-items: center;
 }
 
 .title {
@@ -35,7 +36,7 @@ main {
 
 .envelope {
   position: relative;
-  width: min(620px, 100%);
+  width: min(720px, 100%);
   margin: 0 auto;
   padding: 3.5rem 2rem 2rem;
   border-radius: 28px;
@@ -101,6 +102,8 @@ main {
   cursor: pointer;
   overflow: hidden;
   z-index: 2;
+  width: min(460px, 100%);
+  margin: 0 auto;
 }
 
 .envelope-closed::after {
@@ -172,7 +175,9 @@ main {
   position: relative;
   z-index: 2;
   animation: letterSlide 0.8s ease;
-  padding: 0 0.5rem 1rem;
+  padding: 0 0.5rem 1.5rem;
+  width: min(640px, 100%);
+  margin: 0 auto;
 }
 
 .letter h3 {
@@ -284,6 +289,63 @@ main {
   text-transform: uppercase;
   letter-spacing: 0.08em;
   color: #a42163;
+}
+
+.draggable-card-area {
+  margin-top: 2rem;
+  padding: 1.5rem;
+  border-radius: 22px;
+  background: linear-gradient(135deg, #fff4fb, #ffffff);
+  border: 2px dashed #ffd1e4;
+  text-align: center;
+}
+
+.draggable-card-area h4 {
+  margin: 0 0 0.5rem;
+  font-size: clamp(1.4rem, 1.2rem + 0.8vw, 2rem);
+  color: #b2276f;
+}
+
+.draggable-card-area p {
+  margin: 0 0 1.5rem;
+  color: #8d3b6a;
+}
+
+.draggable-card-container {
+  position: relative;
+  min-height: 380px;
+  border-radius: 20px;
+  background: rgba(255, 226, 240, 0.35);
+  border: 1px solid rgba(255, 209, 228, 0.7);
+  overflow: hidden;
+}
+
+.draggable-card {
+  position: absolute;
+  width: 260px;
+  height: 300px;
+  border-radius: 18px;
+  background: #fffdfc;
+  border: 4px solid #fff;
+  box-shadow: 0 18px 36px rgba(178, 39, 111, 0.2);
+  padding: 1.2rem 1.2rem 1.8rem;
+  display: grid;
+  place-items: center;
+  gap: 0.75rem;
+  cursor: grab;
+  touch-action: none;
+}
+
+.draggable-card:active {
+  cursor: grabbing;
+}
+
+.card-loading {
+  padding: 2rem;
+  border-radius: 16px;
+  background: #fff6fb;
+  color: #b2276f;
+  font-weight: 600;
 }
 
 .question-area {

@@ -449,8 +449,8 @@ main {
   flex-wrap: wrap;
   overflow: hidden;
   padding: 0 1rem;
-  --no-base-x: -120%;
-  --no-base-y: -50%;
+  --no-base-x: 0%;
+  --no-base-y: 0%;
 }
 
 .btn {
@@ -471,7 +471,6 @@ main {
 .btn-yes {
   background: linear-gradient(120deg, #ff6fb6, #ff9ccf);
   color: #fff;
-  margin-left: 4.5rem;
 }
 
 .btn-no {
@@ -480,9 +479,7 @@ main {
 }
 
 .btn-no-escape {
-  position: absolute;
-  left: 50%;
-  top: 50%;
+  position: relative;
   transition: transform 0.2s ease;
   will-change: transform;
 }
@@ -634,15 +631,17 @@ main {
   }
 
   .button-row {
-    height: 120px;
-    padding: 0.5rem 0.75rem;
-    gap: 1.5rem;
-    --no-base-x: -50%;
-    --no-base-y: -50%;
+    height: auto;
+    min-height: 72px;
+    padding: 0.75rem;
+    gap: 1rem;
+    flex-wrap: nowrap;
+    --no-base-x: 0%;
+    --no-base-y: 0%;
   }
 
   .letter {
-    padding: 0 0.25rem 1.25rem;
+    padding: 0.75rem 0.75rem 2.5rem;
   }
 
   .letter p {

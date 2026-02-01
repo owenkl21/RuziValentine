@@ -67,6 +67,7 @@ export default function Home() {
   const [noOffset, setNoOffset] = useState({ x: 0, y: 0 });
   const buttonRowRef = useRef<HTMLDivElement | null>(null);
   const noButtonRef = useRef<HTMLButtonElement | null>(null);
+  const dragEnabled = accepted !== "yes";
 
   const handleYesClick = useCallback(() => {
     setAccepted("yes");
@@ -198,7 +199,10 @@ export default function Home() {
                 )}
               </div>
               {shouldShowCards ? (
-                <DraggableCardContainer className="letter-card-overlay">
+                <DraggableCardContainer
+                  className="letter-card-overlay"
+                  constrainToContainer={false}
+                >
                   <p className="card-hint">
                     If it&apos;s your first day at Fight Club, you have to fight.
                   </p>
@@ -206,6 +210,7 @@ export default function Home() {
                     <DraggableCardBody
                       key={card.id}
                       className={`heart-card ${card.className}`}
+                      isDraggable={dragEnabled}
                       style={{ transform: `rotate(${card.rotate}deg)` }}
                     >
                       <div className="card-media">

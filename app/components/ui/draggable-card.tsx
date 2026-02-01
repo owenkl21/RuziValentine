@@ -47,16 +47,16 @@ type DragState = {
   start: DraggableCardPosition;
 };
 
-type DraggableCardProps = React.HTMLAttributes<HTMLDivElement> & {
+type DraggableCardBodyProps = React.HTMLAttributes<HTMLDivElement> & {
   className?: string;
 };
 
-export function DraggableCard({
+export function DraggableCardBody({
   children,
   className,
   style,
   ...props
-}: DraggableCardProps) {
+}: DraggableCardBodyProps) {
   const constraintsRef = useContext(ConstraintsContext);
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [position, setPosition] = useState<DraggableCardPosition>({
@@ -156,7 +156,7 @@ export function DraggableCard({
   return (
     <div
       ref={cardRef}
-      className={`draggable-card${className ? ` ${className}` : ""}`}
+      className={`draggable-card-body${className ? ` ${className}` : ""}`}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}

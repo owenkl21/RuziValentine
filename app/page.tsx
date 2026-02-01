@@ -3,7 +3,7 @@
 import Image from "next/image";
 import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 import {
-  DraggableCard,
+  DraggableCardBody,
   DraggableCardContainer,
 } from "./components/ui/draggable-card";
 
@@ -11,6 +11,8 @@ type Card = {
   id: number;
   src: string;
   label: string;
+  className: string;
+  rotate: number;
 };
 
 const createInitialCards = (): Card[] => [
@@ -18,31 +20,43 @@ const createInitialCards = (): Card[] => [
     id: 1,
     src: "/images/heart-1.svg",
     label: "Aeternity sparkle",
+    className: "card-slot-1",
+    rotate: -6,
   },
   {
     id: 2,
     src: "/images/heart-2.svg",
     label: "Aeternity bloom",
+    className: "card-slot-2",
+    rotate: -4,
   },
   {
     id: 3,
     src: "/images/heart-3.svg",
     label: "Aeternity wish",
+    className: "card-slot-3",
+    rotate: 4,
   },
   {
     id: 4,
     src: "/images/heart-1.svg",
     label: "Aeternity glow",
+    className: "card-slot-4",
+    rotate: 8,
   },
   {
     id: 5,
     src: "/images/heart-2.svg",
     label: "Aeternity whisper",
+    className: "card-slot-5",
+    rotate: -8,
   },
   {
     id: 6,
     src: "/images/heart-3.svg",
     label: "Aeternity flutter",
+    className: "card-slot-6",
+    rotate: 2,
   },
 ];
 
@@ -185,15 +199,14 @@ export default function Home() {
               </div>
               {shouldShowCards ? (
                 <DraggableCardContainer className="letter-card-overlay">
-                  {createInitialCards().map((card, index) => (
-                    <DraggableCard
+                  <p className="card-hint">
+                    If it&apos;s your first day at Fight Club, you have to fight.
+                  </p>
+                  {createInitialCards().map((card) => (
+                    <DraggableCardBody
                       key={card.id}
-                      className="heart-card"
-                      style={{
-                        top: `${6 + index * 7}%`,
-                        left: `${10 + (index % 3) * 20}%`,
-                      }}
-                      initial={{ rotate: index * 4 - 6 }}
+                      className={`heart-card ${card.className}`}
+                      style={{ transform: `rotate(${card.rotate}deg)` }}
                     >
                       <div className="card-media">
                         <Image
@@ -203,8 +216,8 @@ export default function Home() {
                           height={180}
                         />
                       </div>
-                      <span>{card.label}</span>
-                    </DraggableCard>
+                      <h3>{card.label}</h3>
+                    </DraggableCardBody>
                   ))}
                 </DraggableCardContainer>
               ) : (

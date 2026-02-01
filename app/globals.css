@@ -335,6 +335,11 @@ main {
   letter-spacing: 0.08em;
 }
 
+.draggable-card-body img {
+  pointer-events: none;
+  user-select: none;
+}
+
 .card-hint {
   position: absolute;
   top: 50%;

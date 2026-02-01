@@ -168,6 +168,13 @@ export default function Home() {
                 {accepted !== "yes" && (
                   <div ref={buttonRowRef} className="button-row">
                     <button
+                      className="btn btn-yes"
+                      type="button"
+                      onClick={handleYesClick}
+                    >
+                      Ja
+                    </button>
+                    <button
                       ref={noButtonRef}
                       className="btn btn-no btn-no-escape"
                       type="button"
@@ -182,13 +189,6 @@ export default function Home() {
                       }}
                     >
                       Nee
-                    </button>
-                    <button
-                      className="btn btn-yes"
-                      type="button"
-                      onClick={handleYesClick}
-                    >
-                      Ja
                     </button>
                   </div>
                 )}

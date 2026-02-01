@@ -13,55 +13,58 @@ type Card = {
   label: string;
   className: string;
   rotate: number;
+  priority?: boolean;
 };
 
 const createInitialCards = (): Card[] => [
   {
     id: 1,
     src: "/couples/couple1.jpeg",
-    label: "Golden hour glow",
+    label: "Goue-uur gloed",
     className: "card-slot-1",
     rotate: -6,
+    priority: true,
   },
   {
     id: 2,
     src: "/couples/couple2.jpeg",
-    label: "Midnight laughs",
+    label: "Middernag giggels",
     className: "card-slot-2",
     rotate: -4,
+    priority: true,
   },
   {
     id: 3,
     src: "/couples/couple3.jpeg",
-    label: "Soft cuddles",
+    label: "Sagte drukkies",
     className: "card-slot-3",
     rotate: 4,
   },
   {
     id: 4,
     src: "/couples/couple4.jpeg",
-    label: "City strolls",
+    label: "Stad-stappies",
     className: "card-slot-4",
     rotate: 8,
   },
   {
     id: 5,
     src: "/couples/couple5.jpeg",
-    label: "Sweetest selfies",
+    label: "Soetste selfies",
     className: "card-slot-5",
     rotate: -8,
   },
   {
     id: 6,
     src: "/couples/couple6.jpeg",
-    label: "Hand-in-hand",
+    label: "Hand-aan-hand",
     className: "card-slot-6",
     rotate: 2,
   },
   {
     id: 7,
     src: "/couples/couple7.jpeg",
-    label: "Forever us",
+    label: "Vir altyd ons",
     className: "card-slot-7",
     rotate: 10,
   },
@@ -103,7 +106,10 @@ export default function Home() {
   }, [moveNoButton]);
 
   const envelopeText = useMemo(
-    () => (accepted ? "My heart is doing cartwheels!" : "Tap to open your letter"),
+    () =>
+      accepted
+        ? "My hart doen sommer wielies!"
+        : "Tik om jou briefie oop te maak",
     [accepted],
   );
 
@@ -125,7 +131,7 @@ export default function Home() {
   return (
     <main>
       <section className="scene">
-        <h1 className="title">A tiny letter just for you 💌</h1>
+        <h1 className="title">’n Klein liefdesbrief net vir jou 💌</h1>
         <div className={`envelope ${isOpen ? "open" : ""}`}>
           <div className="envelope-back" aria-hidden="true" />
           <div className="envelope-flap" aria-hidden="true" />
@@ -142,22 +148,22 @@ export default function Home() {
               </div>
               <div className="envelope-copy">
                 <span className="sparkle">✨</span>
-                <span className="eyebrow">Sealed with love</span>
+                <span className="eyebrow">Met liefde verseël</span>
                 <h2>{envelopeText}</h2>
               </div>
             </button>
           ) : (
             <div className="letter">
-              <h3>Dear You,</h3>
+              <h3>Liewe Jy,</h3>
               <p>
-                I made a pocket-sized constellation just for us. Pull the Aeternity
-                hearts around, keep one in your pocket, and let the others float back
-                to me.
+                Ek het ’n sak-sterreskare net vir ons gemaak. Sleep die
+                Aeternity-hartjies rond, hou een in jou sak, en laat die res terugdryf
+                na my toe.
               </p>
 
               <div className="question-area">
-                <h4>Will you be my Valentine?</h4>
-                <p>Say yes to open the surprise hearts.</p>
+                <h4>Sal jy my Valentyn wees?</h4>
+                <p>Sê ja om die verrassings-hartjies oop te maak.</p>
                 {accepted !== "yes" && (
                   <div ref={buttonRowRef} className="button-row">
                     <button
@@ -174,24 +180,24 @@ export default function Home() {
                         transform: `translate(calc(-50% + ${noOffset.x}px), calc(-50% + ${noOffset.y}px))`,
                       }}
                     >
-                      No
+                      Nee
                     </button>
                     <button
                       className="btn btn-yes"
                       type="button"
                       onClick={handleYesClick}
                     >
-                      Yes
+                      Ja
                     </button>
                   </div>
                 )}
                 {accepted && (
                   <div className="yay">
-                    <h5>{accepted === "yes" ? "Yes! 💕" : "No... 😢"}</h5>
+                    <h5>{accepted === "yes" ? "Ja! 💕" : "Nee... 😢"}</h5>
                     <p>
                       {accepted === "yes"
-                        ? "Okay wow—now I get to plan our sweetest date yet."
-                        : "Even a shy no still gets a smile back."}
+                        ? "Okay wow—nou kan ek ons soetste afspraak ooit beplan."
+                        : "Selfs ’n skaam nee kry nog ’n glimlag terug."}
                     </p>
                   </div>
                 )}
@@ -202,7 +208,8 @@ export default function Home() {
                   constrainToContainer={false}
                 >
                   <p className="card-hint">
-                    If it&apos;s your first day at Fight Club, you have to fight.
+                    As dit jou eerste dag by Fight Club is, moet jy baklei (maar net
+                    met glimlagte).
                   </p>
                   {createInitialCards().map((card) => (
                     <DraggableCardBody
@@ -220,6 +227,8 @@ export default function Home() {
                           className="card-photo"
                           draggable={false}
                           onDragStart={(event) => event.preventDefault()}
+                          priority={card.priority}
+                          quality={70}
                         />
                       </div>
                       <h3>{card.label}</h3>

@@ -87,6 +87,8 @@ export default function Home() {
     [accepted],
   );
 
+  const shouldShowCards = accepted === "yes" ? showCards : true;
+
   useEffect(() => {
     if (accepted !== "yes") {
       return;
@@ -181,39 +183,39 @@ export default function Home() {
                   </div>
                 )}
               </div>
-              {accepted === "yes" && (
-                <div className="draggable-card-area">
-                  <h4>Drag the hearts anywhere ✨</h4>
-                  <p>No swiping needed—just play with the cards.</p>
-                  {showCards ? (
-                    <DraggableCardContainer>
-                      {createInitialCards().map((card, index) => (
-                        <DraggableCard
-                          key={card.id}
-                          className="heart-card"
-                          style={{
-                            top: `${12 + index * 8}%`,
-                            left: `${8 + (index % 3) * 22}%`,
-                          }}
-                          initial={{ rotate: index * 4 - 6 }}
-                        >
-                          <div className="card-media">
-                            <Image
-                              src={card.src}
-                              alt={card.label}
-                              width={180}
-                              height={180}
-                            />
-                          </div>
-                          <span>{card.label}</span>
-                        </DraggableCard>
-                      ))}
-                    </DraggableCardContainer>
-                  ) : (
-                    <div className="card-loading">Confetti incoming…</div>
-                  )}
-                </div>
-              )}
+              <div className="draggable-card-area">
+                <h4>Aceternity-style draggable hearts ✨</h4>
+                <p>
+                  Move the cards around anytime—say yes for the confetti surprise.
+                </p>
+                {shouldShowCards ? (
+                  <DraggableCardContainer>
+                    {createInitialCards().map((card, index) => (
+                      <DraggableCard
+                        key={card.id}
+                        className="heart-card"
+                        style={{
+                          top: `${12 + index * 8}%`,
+                          left: `${8 + (index % 3) * 22}%`,
+                        }}
+                        initial={{ rotate: index * 4 - 6 }}
+                      >
+                        <div className="card-media">
+                          <Image
+                            src={card.src}
+                            alt={card.label}
+                            width={180}
+                            height={180}
+                          />
+                        </div>
+                        <span>{card.label}</span>
+                      </DraggableCard>
+                    ))}
+                  </DraggableCardContainer>
+                ) : (
+                  <div className="card-loading">Confetti incoming…</div>
+                )}
+              </div>
             </div>
           )}
         </div>

@@ -18,45 +18,52 @@ type Card = {
 const createInitialCards = (): Card[] => [
   {
     id: 1,
-    src: "/images/heart-1.svg",
-    label: "Aeternity sparkle",
+    src: "/couples/couple1.jpeg",
+    label: "Golden hour glow",
     className: "card-slot-1",
     rotate: -6,
   },
   {
     id: 2,
-    src: "/images/heart-2.svg",
-    label: "Aeternity bloom",
+    src: "/couples/couple2.jpeg",
+    label: "Midnight laughs",
     className: "card-slot-2",
     rotate: -4,
   },
   {
     id: 3,
-    src: "/images/heart-3.svg",
-    label: "Aeternity wish",
+    src: "/couples/couple3.jpeg",
+    label: "Soft cuddles",
     className: "card-slot-3",
     rotate: 4,
   },
   {
     id: 4,
-    src: "/images/heart-1.svg",
-    label: "Aeternity glow",
+    src: "/couples/couple4.jpeg",
+    label: "City strolls",
     className: "card-slot-4",
     rotate: 8,
   },
   {
     id: 5,
-    src: "/images/heart-2.svg",
-    label: "Aeternity whisper",
+    src: "/couples/couple5.jpeg",
+    label: "Sweetest selfies",
     className: "card-slot-5",
     rotate: -8,
   },
   {
     id: 6,
-    src: "/images/heart-3.svg",
-    label: "Aeternity flutter",
+    src: "/couples/couple6.jpeg",
+    label: "Hand-in-hand",
     className: "card-slot-6",
     rotate: 2,
+  },
+  {
+    id: 7,
+    src: "/couples/couple7.jpeg",
+    label: "Forever us",
+    className: "card-slot-7",
+    rotate: 10,
   },
 ];
 
@@ -208,8 +215,9 @@ export default function Home() {
                         <Image
                           src={card.src}
                           alt={card.label}
-                          width={180}
-                          height={180}
+                          fill
+                          sizes="(max-width: 720px) 140px, 180px"
+                          className="card-photo"
                           draggable={false}
                           onDragStart={(event) => event.preventDefault()}
                         />

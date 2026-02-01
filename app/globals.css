@@ -275,11 +275,12 @@ main {
   border: 1px solid rgba(255, 209, 228, 0.8);
   display: grid;
   place-items: center;
+  position: relative;
+  overflow: hidden;
 }
 
-.card img {
-  width: 165px;
-  height: 165px;
+.card-photo {
+  object-fit: cover;
   filter: drop-shadow(0 10px 16px rgba(178, 39, 111, 0.2));
 }
 
@@ -323,6 +324,10 @@ main {
 
 .draggable-card-body:active {
   cursor: grabbing;
+}
+
+.draggable-card-body .card-media {
+  height: 190px;
 }
 
 .draggable-card-body h3 {
@@ -381,6 +386,11 @@ main {
 .card-slot-6 {
   top: 18%;
   left: 44%;
+}
+
+.card-slot-7 {
+  top: 34%;
+  left: 68%;
 }
 
 .card-loading {
@@ -559,6 +569,59 @@ main {
   .card-media {
     height: 170px;
   }
+
+  .draggable-card-body {
+    width: 200px;
+    height: 240px;
+    padding: 1rem 1rem 1.2rem;
+  }
+
+  .draggable-card-body .card-media {
+    height: 140px;
+  }
+
+  .draggable-card-body h3 {
+    font-size: 0.95rem;
+  }
+
+  .card-hint {
+    font-size: 1rem;
+  }
+
+  .card-slot-1 {
+    top: 6%;
+    left: 8%;
+  }
+
+  .card-slot-2 {
+    top: 18%;
+    left: 28%;
+  }
+
+  .card-slot-3 {
+    top: 4%;
+    left: 52%;
+  }
+
+  .card-slot-4 {
+    top: 28%;
+    left: 56%;
+  }
+
+  .card-slot-5 {
+    top: 38%;
+    left: 16%;
+  }
+
+  .card-slot-6 {
+    top: 20%;
+    left: 40%;
+  }
+
+  .card-slot-7 {
+    top: 40%;
+    left: 60%;
+  }
 }
 
 @media (max-width: 560px) {
@@ -568,5 +631,67 @@ main {
 
   .button-row {
     height: 150px;
+  }
+
+  .letter {
+    padding: 0 0.25rem 1.25rem;
+  }
+
+  .letter p {
+    font-size: 0.98rem;
+  }
+
+  .question-area {
+    padding: 5rem 1.1rem 1.25rem;
+  }
+
+  .draggable-card-body {
+    width: 176px;
+    height: 220px;
+    padding: 0.9rem 0.9rem 1rem;
+  }
+
+  .draggable-card-body .card-media {
+    height: 120px;
+  }
+
+  .card-hint {
+    width: min(260px, 78%);
+    font-size: 0.95rem;
+  }
+
+  .card-slot-1 {
+    top: 4%;
+    left: 6%;
+  }
+
+  .card-slot-2 {
+    top: 16%;
+    left: 24%;
+  }
+
+  .card-slot-3 {
+    top: 2%;
+    left: 50%;
+  }
+
+  .card-slot-4 {
+    top: 26%;
+    left: 54%;
+  }
+
+  .card-slot-5 {
+    top: 36%;
+    left: 12%;
+  }
+
+  .card-slot-6 {
+    top: 18%;
+    left: 36%;
+  }
+
+  .card-slot-7 {
+    top: 38%;
+    left: 58%;
   }
 }

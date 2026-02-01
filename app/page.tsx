@@ -178,7 +178,7 @@ export default function Home() {
                         moveNoButton();
                       }}
                       style={{
-                        transform: `translate(calc(-50% + ${noOffset.x}px), calc(-50% + ${noOffset.y}px))`,
+                        transform: `translate(calc(var(--no-base-x, -50%) + ${noOffset.x}px), calc(var(--no-base-y, -50%) + ${noOffset.y}px))`,
                       }}
                     >
                       Nee

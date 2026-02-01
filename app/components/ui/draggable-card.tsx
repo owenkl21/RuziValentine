@@ -80,11 +80,14 @@ export function DraggableCardBody({
     const containerRect = container.getBoundingClientRect();
     const cardRect = card.getBoundingClientRect();
 
+    const maxX = Math.max(0, containerRect.width - cardRect.width);
+    const maxY = Math.max(0, containerRect.height - cardRect.height);
+
     return {
-      minX: 0,
-      minY: 0,
-      maxX: Math.max(0, containerRect.width - cardRect.width),
-      maxY: Math.max(0, containerRect.height - cardRect.height),
+      minX: -maxX,
+      minY: -maxY,
+      maxX,
+      maxY,
     };
   }, [constraintsRef]);
 

@@ -316,6 +316,11 @@ main {
   touch-action: none;
 }
 
+.draggable-card-body[data-draggable="false"] {
+  cursor: default;
+  touch-action: auto;
+}
+
 .draggable-card-body:active {
   cursor: grabbing;
 }

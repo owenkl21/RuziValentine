@@ -9,18 +9,23 @@ import React, {
   useState,
 } from "react";
 
-type ConstraintsContextValue = React.RefObject<HTMLDivElement> | null;
+type ConstraintsContextValue = {
+  ref: React.RefObject<HTMLDivElement> | null;
+  constrainToContainer: boolean;
+} | null;
 
 const ConstraintsContext = createContext<ConstraintsContextValue>(null);
 
 type DraggableCardContainerProps = {
   children: React.ReactNode;
   className?: string;
+  constrainToContainer?: boolean;
 };
 
 export function DraggableCardContainer({
   children,
   className,
+  constrainToContainer = true,
 }: DraggableCardContainerProps) {
   const constraintsRef = useRef<HTMLDivElement | null>(null);
 
@@ -29,7 +34,9 @@ export function DraggableCardContainer({
       ref={constraintsRef}
       className={`draggable-card-container${className ? ` ${className}` : ""}`}
     >
-      <ConstraintsContext.Provider value={constraintsRef}>
+      <ConstraintsContext.Provider
+        value={{ ref: constraintsRef, constrainToContainer }}
+      >
         {children}
       </ConstraintsContext.Provider>
     </div>
@@ -49,20 +56,24 @@ type DragState = {
 
 type DraggableCardBodyProps = React.HTMLAttributes<HTMLDivElement> & {
   className?: string;
+  isDraggable?: boolean;
 };
 
 export function DraggableCardBody({
   children,
   className,
+  isDraggable = true,
   style,
   ...props
 }: DraggableCardBodyProps) {
-  const constraintsRef = useContext(ConstraintsContext);
+  const constraintsContext = useContext(ConstraintsContext);
+  const constraintsRef = constraintsContext?.ref ?? null;
   const cardRef = useRef<HTMLDivElement | null>(null);
   const [position, setPosition] = useState<DraggableCardPosition>({
     x: 0,
     y: 0,
   });
+  const shouldConstrain = constraintsContext?.constrainToContainer ?? true;
   const dragStateRef = useRef<DragState>({
     pointerId: null,
     origin: { x: 0, y: 0 },
@@ -93,6 +104,9 @@ export function DraggableCardBody({
 
   const handlePointerDown = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!isDraggable) {
+        return;
+      }
       if (event.button !== 0) {
         return;
       }
@@ -104,16 +118,19 @@ export function DraggableCardBody({
         start: { ...position },
       };
     },
-    [position],
+    [isDraggable, position],
   );
 
   const handlePointerMove = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!isDraggable) {
+        return;
+      }
       if (dragStateRef.current.pointerId !== event.pointerId) {
         return;
       }
 
-      const constraints = getConstraints();
+      const constraints = shouldConstrain ? getConstraints() : null;
       const deltaX = event.clientX - dragStateRef.current.origin.x;
       const deltaY = event.clientY - dragStateRef.current.origin.y;
 
@@ -127,11 +144,14 @@ export function DraggableCardBody({
 
       setPosition({ x: nextX, y: nextY });
     },
-    [getConstraints],
+    [getConstraints, isDraggable, shouldConstrain],
   );
 
   const handlePointerUp = useCallback(
     (event: React.PointerEvent<HTMLDivElement>) => {
+      if (!isDraggable) {
+        return;
+      }
       if (dragStateRef.current.pointerId !== event.pointerId) {
         return;
       }
@@ -143,7 +163,7 @@ export function DraggableCardBody({
         start: { ...position },
       };
     },
-    [position],
+    [isDraggable, position],
   );
 
   const mergedStyle = useMemo<React.CSSProperties>(() => {
@@ -160,6 +180,7 @@ export function DraggableCardBody({
     <div
       ref={cardRef}
       className={`draggable-card-body${className ? ` ${className}` : ""}`}
+      data-draggable={isDraggable}
       onPointerDown={handlePointerDown}
       onPointerMove={handlePointerMove}
       onPointerUp={handlePointerUp}

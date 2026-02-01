@@ -634,9 +634,11 @@ main {
   }
 
   .button-row {
-    height: 140px;
+    height: 120px;
     padding: 0.5rem 0.75rem;
-    --no-base-x: -110%;
+    gap: 1.5rem;
+    --no-base-x: -50%;
+    --no-base-y: -50%;
   }
 
   .letter {
@@ -648,11 +650,11 @@ main {
   }
 
   .question-area {
-    padding: 3.5rem 1rem 1.25rem;
+    padding: 2.75rem 0.9rem 1.1rem;
   }
 
   .btn-yes {
-    margin-left: 3.5rem;
+    margin-left: 0;
   }
 
   .draggable-card-body {

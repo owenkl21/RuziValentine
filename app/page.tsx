@@ -1,7 +1,7 @@
 "use client";
 
 import Image from "next/image";
-import { useCallback, useMemo, useRef, useState } from "react";
+import { useCallback, useEffect, useMemo, useRef, useState } from "react";
 
 type Card = {
   id: number;
@@ -50,7 +50,10 @@ export default function Home() {
   const [accepted, setAccepted] = useState<string | null>(null);
   const [cards, setCards] = useState<Card[]>(() => createInitialCards());
   const [dragOffset, setDragOffset] = useState({ x: 0, y: 0 });
+  const [noOffset, setNoOffset] = useState({ x: 0, y: 0 });
   const cardsRef = useRef<HTMLDivElement | null>(null);
+  const buttonRowRef = useRef<HTMLDivElement | null>(null);
+  const noButtonRef = useRef<HTMLButtonElement | null>(null);
   const dragRef = useRef<{
     id: number;
     pointerId: number;
@@ -117,6 +120,33 @@ export default function Home() {
       resetDrag();
     }
   }, [resetDrag]);
+
+  const handleYesClick = useCallback(() => {
+    setAccepted("yes");
+  }, []);
+
+  const moveNoButton = useCallback(() => {
+    const row = buttonRowRef.current;
+    const button = noButtonRef.current;
+    if (!row || !button) {
+      return;
+    }
+    const rowRect = row.getBoundingClientRect();
+    const buttonRect = button.getBoundingClientRect();
+    const padding = 12;
+    const maxX = Math.max((rowRect.width - buttonRect.width) / 2 - padding, 0);
+    const maxY = Math.max((rowRect.height - buttonRect.height) / 2 - padding, 0);
+    const nextX = (Math.random() * 2 - 1) * maxX;
+    const nextY = (Math.random() * 2 - 1) * maxY;
+    setNoOffset({ x: nextX, y: nextY });
+  }, []);
+
+  useEffect(() => {
+    const frame = window.requestAnimationFrame(() => {
+      moveNoButton();
+    });
+    return () => window.cancelAnimationFrame(frame);
+  }, [moveNoButton]);
 
   const envelopeText = useMemo(
     () => (accepted ? "My heart is doing cartwheels!" : "Tap to open your letter"),
@@ -207,16 +237,33 @@ export default function Home() {
               <div className="question-area">
                 <h4>Will you be my Valentine?</h4>
                 <p>Drag a card left for “no” or right for “yes”.</p>
-                <div className="button-row">
-                  <div className="btn btn-no">No</div>
-                  <div className="btn btn-yes">Yes</div>
+                <div ref={buttonRowRef} className="button-row">
+                  <button
+                    ref={noButtonRef}
+                    className="btn btn-no btn-no-escape"
+                    type="button"
+                    onPointerEnter={moveNoButton}
+                    onPointerDown={moveNoButton}
+                    onClick={(event) => {
+                      event.preventDefault();
+                      moveNoButton();
+                    }}
+                    style={{
+                      transform: `translate(calc(-50% + ${noOffset.x}px), calc(-50% + ${noOffset.y}px))`,
+                    }}
+                  >
+                    No
+                  </button>
+                  <button className="btn btn-yes" type="button" onClick={handleYesClick}>
+                    Yes
+                  </button>
                 </div>
                 {accepted && (
                   <div className="yay">
                     <h5>{accepted === "yes" ? "Yes! 💕" : "No... 😢"}</h5>
                     <p>
                       {accepted === "yes"
-                        ? "You just made this letter the happiest in the whole mailbox."
+                        ? "Okay wow—now I get to plan our sweetest date yet."
                         : "Even a shy no still gets a smile back."}
                     </p>
                   </div>

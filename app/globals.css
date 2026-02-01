@@ -448,6 +448,9 @@ main {
   gap: 2.5rem;
   flex-wrap: wrap;
   overflow: hidden;
+  padding: 0 1rem;
+  --no-base-x: -120%;
+  --no-base-y: -50%;
 }
 
 .btn {
@@ -468,6 +471,7 @@ main {
 .btn-yes {
   background: linear-gradient(120deg, #ff6fb6, #ff9ccf);
   color: #fff;
+  margin-left: 4.5rem;
 }
 
 .btn-no {
@@ -630,7 +634,9 @@ main {
   }
 
   .button-row {
-    height: 150px;
+    height: 140px;
+    padding: 0.5rem 0.75rem;
+    --no-base-x: -110%;
   }
 
   .letter {
@@ -642,7 +648,11 @@ main {
   }
 
   .question-area {
-    padding: 5rem 1.1rem 1.25rem;
+    padding: 3.5rem 1rem 1.25rem;
+  }
+
+  .btn-yes {
+    margin-left: 3.5rem;
   }
 
   .draggable-card-body {

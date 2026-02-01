@@ -291,26 +291,6 @@ main {
   color: #a42163;
 }
 
-.draggable-card-area {
-  margin-top: 2rem;
-  padding: 1.5rem;
-  border-radius: 22px;
-  background: linear-gradient(135deg, #fff4fb, #ffffff);
-  border: 2px dashed #ffd1e4;
-  text-align: center;
-}
-
-.draggable-card-area h4 {
-  margin: 0 0 0.5rem;
-  font-size: clamp(1.4rem, 1.2rem + 0.8vw, 2rem);
-  color: #b2276f;
-}
-
-.draggable-card-area p {
-  margin: 0 0 1.5rem;
-  color: #8d3b6a;
-}
-
 .draggable-card-container {
   position: relative;
   min-height: 380px;
@@ -346,6 +326,28 @@ main {
   background: #fff6fb;
   color: #b2276f;
   font-weight: 600;
+}
+
+.letter-card-overlay {
+  position: absolute;
+  inset: 0.75rem 0.5rem 0;
+  min-height: 0;
+  height: calc(100% - 0.75rem);
+  border-radius: 20px;
+  border: none;
+  background: transparent;
+  overflow: visible;
+  z-index: 3;
+  pointer-events: none;
+}
+
+.letter-card-overlay .draggable-card {
+  pointer-events: auto;
+}
+
+.letter-card-loading {
+  margin-top: 2rem;
+  text-align: center;
 }
 
 .question-area {

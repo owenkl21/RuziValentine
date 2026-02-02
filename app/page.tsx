@@ -17,14 +17,14 @@ type Card = {
 };
 
 const createInitialCards = (): Card[] => [
-  // {
-  //   id: 1,
-  //   src: "/couples/couple1.jpeg",
-  //   label: "Goue-uur gloed",
-  //   className: "card-slot-1",
-  //   rotate: -6,
-  //   priority: true,
-  // },
+  {
+    id: 1,
+    src: "/couples/couple1.jpeg",
+    label: "Jy is my alles",
+    className: "card-slot-1",
+    rotate: -6,
+    priority: true,
+  },
   {
     id: 2,
     src: "/couples/couple2.jpeg",
@@ -43,14 +43,14 @@ const createInitialCards = (): Card[] => [
   {
     id: 4,
     src: "/couples/couple4.jpeg",
-    label: "Stilte saam",
+    label: "Snaakse oomblikke",
     className: "card-slot-4",
     rotate: 8,
   },
   {
     id: 5,
     src: "/couples/couple5.jpeg",
-    label: "Die Verloofde Dans",
+    label: "Ons teen die wêreld",
     className: "card-slot-5",
     rotate: -8,
   },
@@ -60,13 +60,6 @@ const createInitialCards = (): Card[] => [
     label: "Skouer-aan-skouer",
     className: "card-slot-6",
     rotate: 2,
-  },
-  {
-    id: 7,
-    src: "/couples/couple7.jpeg",
-    label: "Vir altyd ons",
-    className: "card-slot-7",
-    rotate: 10,
   },
 ];
 
@@ -154,15 +147,18 @@ export default function Home() {
             </button>
           ) : (
             <div className="letter">
-              <h3>Liewe Ruzi,</h3>
+              <h3>My Liewe Lyf,</h3>
               <p>
-                Elke dag dank ek God vir jou, vir jou hart, jou liefde en die pad wat ons saam stap. Jy is my veilige plek, my vreugde en my beste vriend. Ek sien so uit na ons toekoms saam, hand aan hand, met God in die middel van alles wat ons doen.
+                Dankie vir jou, Dankie vir wie jy vir my is en beteken, Dankie dat jy my liefhet en iemand so baie lief het so maklik te maak, ek sien my virewig in jou oë as ek net vinnig kyk maar my liefde van my lewe as ek daar in staar, dis net jy vir my, jys presies vir my gemaak en jys meerr as perfek vir my, ekt jou oneindig verskriklik onbeskryflik onophoudend lief en ek soek my virewig saam met jou❤️❤️❤️
               </p>
-              <p>“Bo alles moet julle mekaar innig liefhê, want die liefde bedek baie sondes.”
-(1 Petrus 4:8)</p>
-              <p>Gelukkige Valentynsdag, my liefde. Ek kies jou, vandag en elke dag</p>
+              <p>Aiii my lyf
+Forever and a day, altyd jy🫵❤️
+Whenever, Wherever🗺️🫶🏻❤️
+Locked in🔐🫶🏻❤️
+Onbreekbaar⛓️🫶🏻❤️
+Ek en jy, virewig en viraltyd♾️🫶🏻❤️</p>
+              <p>Sal jy asseblief my die gelukkigste Ou ooit maak en my valentyn wees?🫶🏻❤️</p>
               <p>Met al my Liefde,</p>
-              <p>Jou Verloofde!</p>
               <div className="question-area">
                 <h4>Sal jy my Valentyn wees?</h4>
                 {accepted !== "yes" && (
